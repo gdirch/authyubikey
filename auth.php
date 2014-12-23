@@ -15,8 +15,9 @@ require_once 'lib/Yubico.php';
 if(!defined('DOKU_INC')) die();
 
 /*
- * Class auth_plugin_authyubikey simply extends the
- * auth_plugin_authplain class definition.
+ * Class auth_plugin_authyubikey simply extends the basic
+ * auth_plugin_authplain class definition by Andreas Gohr
+ * <andi@splitbrain.org>.
  */
 class auth_plugin_authyubikey extends auth_plugin_authplain {
     /**
