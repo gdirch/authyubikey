@@ -152,12 +152,12 @@ class auth_plugin_authyubikey extends auth_plugin_authplain {
         $userline = $this->_createUserLine($newuser, $userinfo['pass'], $userinfo['name'], $userinfo['mail'], $userinfo['grps']);
 
         if(!$this->deleteUsers(array($user))) {
-            msg('Unable to modify user data. Please inform the Wiki-Admin', -1);
+            msg($this->getLang('yubikeymodifyerr1'), -1);
             return false;
         }
 
         if(!io_saveFile($config_cascade['plainauth.users']['default'], $userline, true)) {
-            msg('There was an error modifying your user data. You should register again.', -1);
+            msg($this->getLang('yubikeymodifyerr2'), -1);
             // FIXME, user has been deleted but not recreated, should force a logout and redirect to login page
             $ACT = 'register';
             return false;
@@ -168,7 +168,7 @@ class auth_plugin_authyubikey extends auth_plugin_authplain {
             $yubiline .= $newuser . ':' . $yubi . "\n";
         }
         if(!io_saveFile(DOKU_CONF . 'users.yubikeys.php', $yubiline, true)) {
-            msg('There was an error saving your Yubikey ID\'s. You should try again.', -1);
+            msg($this->getLang('yubikeymodifyerr3'), -1);
             return false;
         }
  
