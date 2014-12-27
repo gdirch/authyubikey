@@ -42,6 +42,11 @@ class action_plugin_authyubikey extends DokuWiki_Action_Plugin {
      * @param array      $param
      */
     public function handle_loginform(Doku_Event &$event, $param) {
+        global $auth;
+
+        /* Check for activated authyubikey plugin */
+        if(!is_a($auth, 'auth_plugin_authyubikey')) return;
+
         /** Get a reference to $form */
         $form =& $event->data;
 
@@ -67,6 +72,9 @@ class action_plugin_authyubikey extends DokuWiki_Action_Plugin {
         global $INPUT;
         global $auth;
         global $conf;
+
+        /* Check for activated authyubikey plugin */
+        if(!is_a($auth, 'auth_plugin_authyubikey')) return;
 
         /** Get a reference to $form */
         $form =& $event->data;
