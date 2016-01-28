@@ -24,7 +24,7 @@ class action_plugin_authyubikey extends DokuWiki_Action_Plugin {
      * @param    Doku_Event_Handler
      *
      */
-    public function register(Doku_Event_Handler &$controller) {
+    public function register(Doku_Event_Handler $controller) {
 
         $controller->register_hook('HTML_LOGINFORM_OUTPUT', 'BEFORE', $this, 'handle_loginform');
         $controller->register_hook('HTML_UPDATEPROFILEFORM_OUTPUT', 'BEFORE', $this, 'handle_updateprofileform');
