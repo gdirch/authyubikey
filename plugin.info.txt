@@ -1,7 +1,7 @@
 base   authyubikey
 author Dirk Scheer
 email  dirk@scheernet.de
-date   2016-01-28
+date   2016-01-29
 name   Plain Auth Plugin with Yubikey's two factor identifiction via OTP
 desc   Provides user authentication against DokuWiki's local password storage combined with the two factor identification provided by Yubico's Yubikey
 url    https://github.com/gdirch/authyubikey.git
