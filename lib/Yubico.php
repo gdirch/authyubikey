@@ -5,7 +5,7 @@
    * @category    Auth
    * @package     Auth_Yubico
    * @author      Simon Josefsson <simon@yubico.com>, Olov Danielson <olov@yubico.com>
-   * @copyright   2007, 2008, 2009, 2010, 2011 Yubico AB
+   * @copyright   2007-2015 Yubico AB
    * @license     http://opensource.org/licenses/bsd-license.php New BSD License
    * @version     2.0
    * @link        http://www.yubico.com/
@@ -212,17 +212,26 @@ class Auth_Yubico
 	 */
 	function parsePasswordOTP($str, $delim = '[:]')
 	{
-		if (!preg_match("/^((.*)" . $delim . ")?" .
-				"(([cbdefghijklnrtuvCBDEFGHIJKLNRTUV]{0,16})" .
-				"([cbdefghijklnrtuvCBDEFGHIJKLNRTUV]{32}))$/",
-				$str, $matches)) {
-			return false;
-		}
-		$ret['password'] = $matches[2];
-		$ret['otp'] = $matches[3];
-		$ret['prefix'] = $matches[4];
-		$ret['ciphertext'] = $matches[5];
-		return $ret;
+	  if (!preg_match("/^((.*)" . $delim . ")?" .
+			  "(([cbdefghijklnrtuv]{0,16})" .
+			  "([cbdefghijklnrtuv]{32}))$/i",
+			  $str, $matches)) {
+	    /* Dvorak? */
+	    if (!preg_match("/^((.*)" . $delim . ")?" .
+			    "(([jxe\.uidchtnbpygk]{0,16})" .
+			    "([jxe\.uidchtnbpygk]{32}))$/i",
+			    $str, $matches)) {
+	      return false;
+	    } else {
+	      $ret['otp'] = strtr($matches[3], "jxe.uidchtnbpygk", "cbdefghijklnrtuv");
+	    }
+	  } else {
+	    $ret['otp'] = $matches[3];
+	  }
+	  $ret['password'] = $matches[2];
+	  $ret['prefix'] = $matches[4];
+	  $ret['ciphertext'] = $matches[5];
+	  return $ret;
 	}
 
 	/* TODO? Add functions to get parsed parts of server response? */
@@ -320,6 +329,7 @@ class Auth_Yubico
 	      curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
 	      if (!$this->_httpsverify) {
 		curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
 	      }
 	      curl_setopt($handle, CURLOPT_FAILONERROR, true);
 	      /* If timeout is set, we better apply it here as well
@@ -328,7 +338,7 @@ class Auth_Yubico
 	      if ($timeout) curl_setopt($handle, CURLOPT_TIMEOUT, $timeout);
 	      curl_multi_add_handle($mh, $handle);
 	      
-	      $ch[$handle] = $handle;
+	      $ch[(int)$handle] = $handle;
 	    }
 
 	  /* Execute and read request. */
@@ -435,7 +445,7 @@ class Auth_Yubico
 		
 		curl_multi_remove_handle($mh, $info['handle']);
 		curl_close($info['handle']);
-		unset ($ch[$info['handle']]);
+		unset ($ch[(int)$info['handle']]);
 	      }
 	      curl_multi_select($mh);
 	    }

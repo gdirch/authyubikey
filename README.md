@@ -3,7 +3,12 @@ authyubikey
 This plugin is written for Dokuwiki to enable a two factor authentification.
 
 
-INSTALL
+Prerequisites
+=============
+You have to ensure, that your PHP installation supports PEAR and curl (i.e. php-pear and php5-curl on Debian systems).
+
+
+Install
 =======
 This plugin can be installed manually in the plugin directory of Dokuwiki
 (i.e. /usr/share/dokuwiki/lib/plugins).
